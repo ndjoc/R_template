@@ -69,9 +69,7 @@ pixi run -e bayes install-brms
 | `pixi run install-packages` | Install additional R packages |
 | `pixi run install-all-packages` | Install optional packages |
 | `pixi run test` | Run automated tests |
-| `pixi run check` | Run development checks |
 | `pixi run session` | Display R session information |
-| `pixi run report` | Render Quarto reports |
 
 ## Development
 
