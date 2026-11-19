@@ -1,0 +1,39 @@
+# Project configuration
+project:
+  name: "R_template"
+  version: "0.1.0"
+
+# Directory paths (relative to project root)
+paths:
+  data: "data"
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  outputs: "outputs"
+  figures: "outputs/figures"
+  tables: "outputs/tables"
+  reports: "reports"
+
+# Data handling
+data:
+  file_format: "csv"
+  delimiter: ","
+  missing_values: ["", "NA", "NaN"]
+
+# Statistical analysis
+statistics:
+  significance_level: 0.05
+  confidence_level: 0.95
+  correction_method: "holm"
+
+# Visualization defaults
+visualization:
+  theme: "minimal"
+  base_size: 12
+  figure_width: 8
+  figure_height: 6
+  figure_dpi: 300
+
+# Reproducibility
+reproducibility:
+  random_seed: 1234
+  save_session_info: true

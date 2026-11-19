@@ -1,0 +1,79 @@
+[project]
+name = "R_template"
+version = "0.1.0"
+description = "Reproducable R_template for stats and visualization"
+readme = "README.md"
+authors = [
+    { name = "Niklas Jocher", email = "niklasdavid.jocher@plus.ac.at" }
+]
+keywords = [
+    "MEG",
+    "BIDS",
+    "neuroscience",
+    "statistics",
+    "visualization",
+    "reproducibility"
+]
+
+[project.urls]
+repository = "https://github.com/ndjoc/R_template"
+
+[tool.pixi.workspace]
+name = "meg-analysis"
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+[tool.pixi.dependencies]
+r-base = ">=4.4,<4.5"
+r-tidyverse = "*"
+"r-data.table" = "*"
+r-here = "*"
+r-yaml = "*"
+r-jsonlite = "*"
+r-fs = "*"
+r-readr = "*"
+r-stringr = "*"
+r-lme4 = "*"
+"r-lmertest" = "*"
+r-emmeans = "*"
+r-afex = "*"
+r-broom = "*"
+r-mgcv = "*"
+r-ggplot2 = "*"
+r-patchwork = "*"
+r-ggdist = "*"
+r-ggpubr = "*"
+r-viridis = "*"
+r-targets = "*"
+r-tarchetypes = "*"
+r-knitr = "*"
+r-rmarkdown = "*"
+r-devtools = "*"
+r-testthat = "*"
+r-roxygen2 = "*"
+r-remotes = "*"
+quarto = "*"
+
+[tool.pixi.feature.bayes.dependencies]
+r-cmdstanr = "*"
+make = "*"
+c-compiler = "*"
+cxx-compiler = "*"
+fortran-compiler = "*"
+
+[tool.pixi.feature.bayes.tasks]
+install-brms = "Rscript -e 'install.packages(\"brms\", repos=\"https://cloud.r-project.org\")'"
+check-stan = "Rscript -e 'cmdstanr::cmdstan_version()'"
+
+[tool.pixi.tasks]
+setup = "Rscript analysis/00_setup.R"
+check = "Rscript -e 'devtools::test()'"
+session = "Rscript -e 'sessionInfo()'"
+report = "quarto render analysis/reports"
+install-packages = "Rscript analysis/00_install_packages.R"
+install-all-packages = "Rscript analysis/00_install_packages.R --all"
+test = "Rscript -e 'testthat::test_dir(\"tests/testthat\")'"
+
+[tool.pixi.environments]
+default = { features = [], solve-group = "default" }
+bayes = { features = ["bayes"], solve-group = "bayes" }
