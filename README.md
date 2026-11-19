@@ -93,6 +93,24 @@ Add tests for important functions under `tests/testthat/` and run them with:
 pixi run test
 ```
 
+## Using RStudio
+
+RStudio can be used to edit and manage project scripts. However, its R Console does not automatically use the Pixi environment.
+
+To ensure that scripts run with the correct R version and installed packages, execute them through the RStudio Terminal using Pixi:
+
+```bash
+pixi run Rscript analysis/01_data_preparation.R
+```
+
+Run the project setup with:
+
+```bash
+pixi run setup
+```
+
+**Note:** Running scripts directly in the RStudio Console may use a separate system R installation rather than the Pixi-managed environment.
+
 ## Reproducibility
 
 Commit `pixi.lock` and project code to Git. Avoid committing raw datasets, temporary files, or generated outputs unless explicitly required.
