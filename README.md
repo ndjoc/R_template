@@ -9,7 +9,6 @@ A structured starting point for research projects, supporting data handling, sta
 **Core tools:**
 - **R:** Data analysis and visualization.
 - **Pixi:** Environment and dependency management.
-- **Quarto:** Reproducible reports.
 - **Git:** Version control.
 - **CmdStanR and brms:** Optional Bayesian modelling.
 
@@ -22,7 +21,6 @@ R_template/
 ├── config/         # Configuration files
 ├── data/           # Input data (not tracked)
 ├── outputs/        # Figures, tables, and results
-├── reports/        # Quarto reports
 ├── tests/          # Automated tests
 ├── pyproject.toml
 ├── pixi.lock
