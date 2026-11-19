@@ -204,7 +204,7 @@ Store reusable R functions in `R/`, organized by purpose (e.g. `data/`, `stats/`
 ```r
 source("R/data/read_data.R")
 ```
-
+**If you think your function is general enough to be of use for others, you discover bugs or you have requests for implmentation please open issue/create a PR and I will look at it.**
 ## Reproducibility
 
 Commit `pixi.lock` to Git to preserve the resolved environment dependencies. Use `config/config.yaml` for project settings and paths, and set random seeds for reproducible analyses.
