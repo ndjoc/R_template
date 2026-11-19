@@ -186,3 +186,27 @@ pixi run setup
 ```
 
 **Note:** Running scripts directly in the RStudio Console may use a separate system R installation rather than the Pixi-managed environment.
+
+## Testing
+
+Store tests in `tests/testthat/`, following the naming convention `test-<function-name>.R`.
+
+Run all tests with:
+
+```bash
+pixi run test
+```
+
+## Reusable functions
+
+Store reusable R functions in `R/`, organized by purpose (e.g. `data/`, `stats/`, `visualization/`, `utils/`). Source them in analysis scripts when needed:
+
+```r
+source("R/data/read_data.R")
+```
+
+## Reproducibility
+
+Commit `pixi.lock` to Git to preserve the resolved environment dependencies. Use `config/config.yaml` for project settings and paths, and set random seeds for reproducible analyses.
+
+Avoid committing raw data or temporary outputs unless required.
