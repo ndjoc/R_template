@@ -37,8 +37,8 @@ R_template/
 
 **Requirements:** [Git](https://git-scm.com/) and [Pixi](https://pixi.sh/).
 
+Click the **Use this template** button on the top right. You can name your own repository with the template as you need and then clone it. 
 ```bash
-git clone https://github.com/ndjoc/R_template.git
 cd R_template
 
 pixi install
