@@ -61,9 +61,9 @@ check-cmdstan = "Rscript -e 'cmdstanr::check_cmdstan_toolchain()'"
 [tool.pixi.tasks]
 setup = "Rscript analysis/00_setup.R"
 session = "Rscript -e 'sessionInfo()'"
-install-packages = "Rscript analysis/00_install_packages.R"
-install-all-packages = "Rscript analysis/00_install_packages.R --all"
+install-packages = "Rscript R/00_install_packages.R"
 test = "Rscript -e 'testthat::test_dir(\"tests/testthat\")'"
+report = "quarto render reports/example_erp_report.qmd"
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }

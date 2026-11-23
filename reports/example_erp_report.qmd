@@ -1,0 +1,46 @@
+
+---
+title: "Example ERP Analysis"
+subtitle: "Simulated ERP dataset"
+date: today
+format: html
+---
+
+# Introduction
+
+This report demonstrates a reproducible workflow for analysing
+event-related potentials (ERPs) in R.
+
+# Data
+
+The example dataset contains 20 simulated participants,
+two experimental conditions, and 20 trials per condition.
+
+# Results
+
+## Grand average ERP
+
+![Grand average ERP](../outputs/figures/erp_grand_average.png)
+
+## Summary statistics
+
+```{r}
+summary_data <- read.csv(
+  "../outputs/tables/erp_summary.csv"
+)
+
+knitr::kable(
+  head(summary_data, 10),
+  digits = 3,
+  caption = "First ten rows of ERP summary data"
+)
+```
+
+# Reproducibility
+
+The analysis was performed using the R environment
+managed by Pixi.
+
+```{r}
+sessionInfo()
+```

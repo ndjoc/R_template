@@ -1,0 +1,13 @@
+project:
+  output-dir: ../outputs/reports
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo

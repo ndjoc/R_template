@@ -1,212 +1,114 @@
-# R Template
+# R Research Template
 
-A reproducible R environment for data analysis, statistical modelling, and visualization using R and Pixi.
+A reproducible, modular R environment for research data analysis, statistical modelling, and visualization, managed with [Pixi](https://pixi.sh/), Git, and Quarto.
 
-## Overview
+## Features
 
-A structured starting point for research projects, supporting data handling, statistical analysis, visualization, and reproducible workflows.
-
-**Core tools:**
-- **R:** Data analysis and visualization.
-- **Pixi:** Environment and dependency management.
-- **Git:** Version control.
-- **CmdStanR and brms:** Optional Bayesian modelling.
+- Reproducible, cross-platform R environment (R 4.4.x)
+- Data management and visualization with tidyverse and data.table
+- Statistical modelling, including mixed-effects and Bayesian models
+- Reusable functions and configurable project structure
+- Data validation and automated testing with testthat
+- Quarto-based HTML reporting
+- Optional Bayesian environment with brms and CmdStan
 
 ## Project structure
 
 ```text
 R_template/
-├── analysis/       # Analysis scripts
+├── analysis/       # Analysis and workflow scripts
 ├── R/              # Reusable functions
-├── config/         # Configuration files
-├── data/           # Input data (not tracked)
-├── outputs/        # Figures, tables, and results
+│   ├── data/
+│   ├── stats/
+│   ├── visualization/
+│   ├── utils/
+│   └── bids/
+├── config/         # Project configuration
+├── data/           # Raw, processed, and example data
+├── outputs/        # Figures, tables, and reports
+├── reports/        # Quarto report sources
 ├── tests/          # Automated tests
-├── pyproject.toml
-├── pixi.lock
+├── pyproject.toml  # Pixi configuration and tasks
+├── pixi.lock       # Locked Pixi dependencies
 └── README.md
 ```
 
-## Installation
+## Getting started
 
-**Requirements:** Git and Pixi. A separate R installation is not required.
+**Requirements:** [Git](https://git-scm.com/) and [Pixi](https://pixi.sh/).
 
 ```bash
 git clone https://github.com/ndjoc/R_template.git
 cd R_template
 
 pixi install
-pixi run install-packages
 pixi run setup
+pixi run install-packages
 ```
 
-For optional packages, including Bayesian modelling:
+The setup task loads `config/config.yaml`, initializes the project, sets the random seed, and creates output directories. Additional CRAN and GitHub packages are installed separately through `R/00_install_packages.R`.
+
+## Workflow
+
+The template separates data generation, analysis, reusable functions, and reporting.
+
+1. **Data:** Organize raw, processed, and example data under `data/`.
+2. **Analysis:** Develop workflows and analysis scripts in `analysis/`.
+3. **Functions:** Store reusable code in the appropriate `R/` subdirectories.
+4. **Validation:** Check input data, analysis results, and generated outputs.
+5. **Reporting:** Create Quarto documents in `reports/` and render HTML reports to `outputs/reports/`.
+
+An example ERP workflow demonstrates data generation, validation, statistical summaries, visualization, and reporting.
+
+Run the example workflow:
 
 ```bash
-pixi run install-all-packages
+pixi run Rscript analysis/01_generate_example_data.R
+pixi run Rscript analysis/02_example_analysis.R
+pixi run report
 ```
 
-## Environments
+The analysis generates figures and tables in `outputs/`, which are then used by the Quarto report. Run the analysis before rendering the report.
 
-- **default:** Data analysis, frequentist statistics, and visualization.
-- **bayes:** Extends the default environment with Bayesian modelling tools.
+## Testing and development
 
-Install the Bayesian environment:
+Automated tests use `testthat` and are stored in `tests/testthat/`.
+
+```bash
+pixi run test
+```
+
+Project settings, paths, visualization parameters, and reproducibility options are maintained in `config/config.yaml`. Use `here::here()` for project-relative paths.
+
+Available Pixi tasks:
+
+| Command | Purpose |
+|---|---|
+| `pixi run setup` | Initialize project |
+| `pixi run session` | Display R session information |
+| `pixi run install-packages` | Install additional packages |
+| `pixi run test` | Run automated tests |
+| `pixi run report` | Render example HTML report |
+
+## Optional Bayesian environment
+
+A separate environment provides `brms` and CmdStan:
 
 ```bash
 pixi install -e bayes
 pixi run -e bayes install-brms
-```
-
-## Available commands
-
-| Command | Description |
-|---|---|
-| `pixi install` | Install environment |
-| `pixi run setup` | Load packages and project configuration |
-| `pixi run install-packages` | Install additional R packages |
-| `pixi run install-all-packages` | Install optional packages |
-| `pixi run test` | Run automated tests |
-| `pixi run session` | Display R session information |
-
-## Configuration and paths
-
-Project settings and file paths are defined centrally in `config/config.yaml`. This allows paths and analysis settings to be changed without modifying individual scripts.
-
-Example configuration:
-
-```yaml
-project:
-  name: "R_template"
-  version: "0.1.0"
-
-paths:
-  data: "data"
-  raw_data: "data/raw"
-  processed_data: "data/processed"
-  outputs: "outputs"
-  figures: "outputs/figures"
-  tables: "outputs/tables"
-  reports: "reports"
-
-visualization:
-  figure_width: 8
-  figure_height: 6
-  figure_dpi: 300
-
-reproducibility:
-  random_seed: 1234
-```
-
-The configuration is loaded automatically by `analysis/00_setup.R`. To use it in an analysis script:
-
-```r
-source("analysis/00_setup.R")
-```
-
-Access configuration values using `$`:
-
-```r
-config$paths$figures
-config$paths$tables
-config$visualization$figure_dpi
-```
-
-### Saving outputs
-
-Use `here::here()` to construct paths relative to the project root.
-
-For example, save a figure:
-
-```r
-library(ggplot2)
-
-p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
-  geom_point()
-
-ggsave(
-  filename = here::here(config$paths$figures, "scatterplot.png"),
-  plot = p,
-  width = config$visualization$figure_width,
-  height = config$visualization$figure_height,
-  dpi = config$visualization$figure_dpi
-)
-```
-
-Or save a table:
-
-```r
-write.csv(
-  mtcars,
-  here::here(config$paths$tables, "mtcars.csv"),
-  row.names = FALSE
-)
-```
-
-Output directories are created automatically during project setup.
-
-**Recommendation:** Define project paths and commonly changed settings in `config.yaml` rather than hardcoding them in analysis scripts. This keeps workflows portable and easier to maintain.
-
-## Development
-
-Store reusable functions in `R/`, organized by purpose (e.g. `data/`, `stats/`, `visualization/`, `utils/`). Keep individual analysis workflows in `analysis/`.
-
-Use the project setup in analysis scripts:
-
-```r
-source("analysis/00_setup.R")
-```
-
-Load reusable functions when needed:
-
-```r
-source("R/data/read_data.R")
-```
-
-Add tests for important functions under `tests/testthat/` and run them with:
-
-```bash
-pixi run test
-```
-
-## Using RStudio
-
-RStudio can be used to edit and manage project scripts. However, its R Console does not automatically use the Pixi environment.
-
-To ensure that scripts run with the correct R version and installed packages, execute them through the RStudio Terminal using Pixi:
-
-```bash
-pixi run Rscript analysis/01_data_preparation.R
-```
-
-Run the project setup with:
-
-```bash
-pixi run setup
-```
-
-**Note:** Running scripts directly in the RStudio Console may use a separate system R installation rather than the Pixi-managed environment.
-
-## Testing
-
-Store tests in `tests/testthat/`, following the naming convention `test-<function-name>.R`.
-
-Run all tests with:
-
-```bash
-pixi run test
-```
-
-## Reusable functions
-
-Store reusable R functions in `R/`, organized by purpose (e.g. `data/`, `stats/`, `visualization/`, `utils/`). Source them in analysis scripts when needed:
-
-```r
-source("R/data/read_data.R")
+pixi run -e bayes install-cmdstan
+pixi run -e bayes check-cmdstan
 ```
 
 ## Reproducibility
 
-Commit `pixi.lock` to Git to preserve the resolved environment dependencies. Use `config/config.yaml` for project settings and paths, and set random seeds for reproducible analyses.
+- Commit `pyproject.toml` and `pixi.lock` to Git.
+- Use configured random seeds.
+- Keep analysis scripts, functions, and configuration under version control.
+- Record package versions and R session information when appropriate.
+- Avoid committing sensitive research data or temporary outputs.
 
-Avoid committing raw data or temporary outputs unless required.
+Packages installed separately from CRAN or GitHub are not fully pinned by Pixi, so record their versions when exact reproducibility is required.
+
+RStudio can be used for editing scripts and reports. Run analyses through the project terminal with `pixi run` to ensure the Pixi-managed R environment is used.

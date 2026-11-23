@@ -1,5 +1,5 @@
 # ============================================================
-# MEG Analysis Template
+# R Analysis Template
 # Additional R Package Installation
 # ============================================================
 #
@@ -8,10 +8,11 @@
 #
 # Note:
 #   Core dependencies are managed by Pixi.
-#   This script handles packages that are not managed by Pixi.
+#   This script handles additional packages not included
+#   in the Pixi environment.
 #
 # Usage:
-#   pixi run Rscript analysis/00_install_packages.R
+#   pixi run install-packages
 #
 # ============================================================
 
@@ -21,9 +22,6 @@
 # ------------------------------------------------------------
 
 CRAN_REPO <- "https://cloud.r-project.org"
-
-# Install optional packages as well?
-install_all <- "--all" %in% commandArgs(trailingOnly = TRUE)
 
 
 # ------------------------------------------------------------
@@ -62,6 +60,10 @@ install_github <- function(packages) {
   
   if (!requireNamespace("remotes", quietly = TRUE)) {
     install_cran("remotes")
+  }
+  
+  if (!requireNamespace("remotes", quietly = TRUE)) {
+    stop("Could not install the 'remotes' package.")
   }
   
   for (repo in packages) {
@@ -114,75 +116,38 @@ cran_packages <- c(
 # ------------------------------------------------------------
 
 github_packages <- c(
-  
-  # Brain atlas visualization
   "ggsegverse/ggsegGlasser"
-  
 )
 
 
 # ------------------------------------------------------------
-# 5. Optional Bayesian packages
-# ------------------------------------------------------------
-
-bayesian_cran_packages <- c(
-  "brms"
-)
-
-
-# ------------------------------------------------------------
-# 6. Installation
+# 5. Installation
 # ------------------------------------------------------------
 
 message("\n========================================")
-message("Package Installation")
+message("Additional R Package Installation")
 message("========================================\n")
 
 
-# Standard CRAN packages
 install_cran(cran_packages)
 
-
-# GitHub packages
 install_github(github_packages)
 
 
-# Optional Bayesian packages
-if (install_all) {
-  
-  message("\nInstalling optional Bayesian packages...\n")
-  
-  install_cran(bayesian_cran_packages)
-  
-} else {
-  
-  message(
-    "\nSkipping optional Bayesian packages.",
-    "\nUse --all to install them."
-  )
-  
-}
-
-
 # ------------------------------------------------------------
-# 7. Check installations
+# 6. Check installations
 # ------------------------------------------------------------
+
+github_package_names <- vapply(
+  github_packages,
+  function(repo) sub(".*/", "", repo),
+  character(1)
+)
 
 all_packages <- c(
   cran_packages,
-  vapply(
-    github_packages,
-    function(repo) sub(".*/", "", repo),
-    character(1)
-  )
+  github_package_names
 )
-
-if (install_all) {
-  all_packages <- c(
-    all_packages,
-    bayesian_cran_packages
-  )
-}
 
 package_status <- data.frame(
   package = all_packages,
@@ -194,12 +159,16 @@ package_status <- data.frame(
   )
 )
 
-print(package_status)
+print(package_status, row.names = FALSE)
 
 if (any(!package_status$installed)) {
-  warning("Some packages could not be installed.")
-} else {
-  message("\nAll requested packages are installed.")
+  stop(
+    "Some packages could not be installed: ",
+    paste(
+      package_status$package[!package_status$installed],
+      collapse = ", "
+    )
+  )
 }
 
-message("\nPackage installation completed.")
+message("\nAll requested packages are installed.")
